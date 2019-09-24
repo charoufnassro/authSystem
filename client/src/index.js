@@ -14,7 +14,7 @@ const link = process.env.LINK_SERVER;
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({
-    cache, uri: 'http://localhost:5000/graphql', connectToDevTools: true
+    cache, uri: 'http://localhost:5000/graphql'
 });
 
 
