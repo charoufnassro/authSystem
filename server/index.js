@@ -13,17 +13,20 @@ require('./DBConfig/config')
 
 const typeDefs = gql`
     type Query {
-        getUsers: [User]
+        getUsers: [User],
+        getUserByEmail(email: String!): [User],
     }
 
     type User {
+        _id: ID!,
         username: String!,
         email: String!,
         password: String!,
         bio: String,
         image: String,
         hash: String,
-        salt: String
+        salt: String,
+        date: String
     }
     input userInput {
         username: String!,
@@ -32,7 +35,7 @@ const typeDefs = gql`
         bio: String,
         image: String,
         hash: String,
-        salt: String
+        salt: String,
     }
     type Mutation {
         addUser(username: String!,
@@ -51,7 +54,15 @@ const resolvers = {
     Query: {
             getUsers: async () => {
                 try {
-                    return await User.find({}).exec();
+                    return await User.find({});
+                } catch(e) {
+                    return e.message;
+                }
+            },
+            getUserByEmail: async (_, args) => {
+                console.log('Data : ', args)
+                try {
+                    return await User.find(args);
                 } catch(e) {
                     return e.message;
                 }
@@ -61,9 +72,8 @@ const resolvers = {
             addUser: async (_, args) => {
                 try {
                     console.log("added")
-                    let response = await User.create(args);
                     console.log('args : ', args)
-                    pubsub.publish(USER_INSERTED, { userInserted: response ,args });
+                    let response = await User.create(args);
                     return response;
                 } catch(e) {
                     return e.message;
@@ -82,7 +92,7 @@ const resolvers = {
                 try {
                     
                     let _id= id
-                    let _inputUser={userName: inputUser.userName, email: inputUser.email, sexe: inputUser.sexe}
+                    let _inputUser={username: inputUser.username, email: inputUser.email, sexe: inputUser.sexe}
                     console.log("update", _id)
                     let response = await User.findOneAndUpdate({_id}, _inputUser, { new: true});
                     return response;

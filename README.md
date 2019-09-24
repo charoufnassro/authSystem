@@ -34,4 +34,8 @@ configure apolloClient
 
 add antd 
 
+Authentication vs Authorization
+Authentication is the act of matching a session with a given user. Example, given a session I can securely identify the user is user_id 123.
+Authorization is the act determining if a given user can access a given resource. Example, given two users, an admin and a super admin; admins are authorized to see invoices but can’t delete them; super admins are authorized to see and delete invoices.
 
+install and use joi validation for validate input or fields user
